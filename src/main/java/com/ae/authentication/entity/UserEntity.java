@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class UserEntity implements Serializable {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,6 @@ public class User implements Serializable {
         private Boolean enabled;
 
         @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-        private List<Role> roles;
+        private List<RoleEntity> roles;
 
 }
