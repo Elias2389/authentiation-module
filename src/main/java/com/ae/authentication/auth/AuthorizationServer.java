@@ -16,6 +16,15 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @EnableAuthorizationServer
 public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
 
+    private final String APP_NAME = "androidapp";
+    private final String SECRET_TEST = "123456pppaaa";
+    private final String SCOPE_READ = "read";
+    private final String SCOPE_WRITE = "write";
+    private final String TYPE_AUTH = "password";
+    private final String REFRESH_TOKEN = "refresh_token";
+    private final Integer TOKEN_TIME = 3600;
+
+
     final private BCryptPasswordEncoder passwordEncoder;
     final private AuthenticationManager authenticationManager;
     final private JwtAccessTokenConverter jwtAccessTokenConverter;
@@ -40,17 +49,17 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("androidapp")
-                .secret(passwordEncoder.encode("123456pppaaa"))
-                .scopes("read", "write")
-                .authorizedGrantTypes("password", "refresh_token")
-                .accessTokenValiditySeconds(3600)
-                .refreshTokenValiditySeconds(3600);
+                .withClient(APP_NAME)
+                .secret(passwordEncoder.encode(SECRET_TEST))
+                .scopes(SCOPE_READ, SCOPE_WRITE)
+                .authorizedGrantTypes(TYPE_AUTH, REFRESH_TOKEN)
+                .accessTokenValiditySeconds(TOKEN_TIME)
+                .refreshTokenValiditySeconds(TOKEN_TIME);
     }
 
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        super.configure(oauthServer);
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.tokenKeyAccess("permitAll()")
+        .checkTokenAccess("isAuthenticated()");
     }
-
 }
